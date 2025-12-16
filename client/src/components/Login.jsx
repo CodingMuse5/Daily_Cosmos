@@ -1,13 +1,14 @@
 import { useState } from 'react';
-import api from '../api';
+import api from '../api'; // <--- IMPORTANT: We import our smart API tool here
 
-const Login = () => {
-  const [isLogin, setIsLogin] = useState(true); 
-  const [formData, setFormData] = useState({ username: '', email: '', password: '' });
+const Login = ({ setToken }) => {
+  const [isLogin, setIsLogin] = useState(true);
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: ''
+  });
   const [message, setMessage] = useState('');
-
-  // Background Image (Deep Space Nebula)
-  const bgImage = "https://images.unsplash.com/photo-1462331940025-496dfbfc7564?q=80&w=2022&auto=format&fit=crop";
 
   const { username, email, password } = formData;
 
@@ -17,86 +18,83 @@ const Login = () => {
     e.preventDefault();
     setMessage('');
     try {
-      // OLD: const url = isLogin ? 'http://localhost:5000...' : ...
-      // NEW: We just use the endpoint path
+      // OLD CODE WAS: axios.post('http://localhost:5000/api/auth/login'...)
+      // NEW CODE: We let 'api' handle the URL automatically
       const route = isLogin ? '/auth/login' : '/auth/register';
       
-      const res = await api.post(route, formData); // <--- Uses 'api' instead of 'axios'
-      
+      const res = await api.post(route, formData); // <--- Using 'api.post'
+
       localStorage.setItem('token', res.data.token);
+      setToken(res.data.token);
       setMessage(isLogin ? "Authentication Verified 🚀" : "Welcome Aboard! 🎉");
-      setTimeout(() => window.location.reload(), 1000);
+      
     } catch (err) {
+      console.error(err);
       setMessage(err.response?.data?.msg || "Connection Failed");
     }
   };
 
   return (
-    <div 
-      className="min-h-screen flex items-center justify-center text-white relative bg-cover bg-center"
-      style={{ backgroundImage: `url('${bgImage}')` }}
-    >
-      {/* Dark Overlay */}
+    <div className="min-h-screen flex items-center justify-center bg-[url('https://www.nasa.gov/sites/default/files/thumbnails/image/main_image_deep_field_smacs0723-5mb.jpg')] bg-cover bg-center relative">
       <div className="absolute inset-0 bg-black/60"></div>
-
-      {/* The Glass Card */}
-      <div className="relative z-10 bg-black/40 backdrop-blur-xl p-8 rounded-2xl border border-white/10 w-full max-w-md shadow-2xl">
-        
-        <h2 className="text-4xl font-bold text-center mb-2 bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent drop-shadow-lg">
-          {isLogin ? 'Mission Control' : 'Cadet Registration'}
-        </h2>
-        <p className="text-center text-gray-300 mb-8 text-sm tracking-widest uppercase">
-          {isLogin ? 'Identify Yourself' : 'Join the Fleet'}
-        </p>
+      
+      <div className="relative z-10 bg-black/80 p-8 rounded-2xl border border-blue-500/30 shadow-[0_0_50px_rgba(0,100,255,0.3)] w-96 backdrop-blur-sm">
+        <h1 className="text-4xl font-bold text-center mb-2 bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          Mission Control
+        </h1>
+        <p className="text-gray-400 text-center text-xs tracking-widest mb-8">IDENTIFY YOURSELF</p>
 
         {message && (
-          <div className={`p-3 mb-4 rounded text-center text-sm font-bold ${message.includes('Failed') ? 'bg-red-500/50 text-red-100' : 'bg-green-500/50 text-green-100'}`}>
+          <div className={`p-3 mb-4 rounded text-center text-sm font-bold ${message.includes('Failed') ? 'bg-red-900/50 text-red-200 border border-red-500' : 'bg-green-900/50 text-green-200 border border-green-500'}`}>
             {message}
           </div>
         )}
 
-        <form onSubmit={onSubmit} className="space-y-5">
+        <form onSubmit={onSubmit} className="space-y-4">
           {!isLogin && (
             <input 
-              type="text" name="username" placeholder="Astronaut Name" 
-              value={username} onChange={onChange} 
-              className="w-full p-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-blue-400 transition"
+              type="text" 
+              name="username" 
+              value={username} 
+              onChange={onChange}
+              placeholder="Pilot Callsign (Username)" 
+              className="w-full p-3 bg-gray-900/50 border border-gray-700 rounded text-white focus:outline-none focus:border-blue-500 transition"
               required 
             />
           )}
           
           <input 
-            type="email" name="email" placeholder="Comms Channel (Email)" 
-            value={email} onChange={onChange} 
-            className="w-full p-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-blue-400 transition"
+            type="email" 
+            name="email" 
+            value={email} 
+            onChange={onChange}
+            placeholder="Comms Channel (Email)" 
+            className="w-full p-3 bg-gray-900/50 border border-gray-700 rounded text-white focus:outline-none focus:border-blue-500 transition"
             required 
           />
           
           <input 
-            type="password" name="password" placeholder="Security Code" 
-            value={password} onChange={onChange} 
-            className="w-full p-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-blue-400 transition"
+            type="password" 
+            name="password" 
+            value={password} 
+            onChange={onChange}
+            placeholder="Security Code" 
+            className="w-full p-3 bg-gray-900/50 border border-gray-700 rounded text-white focus:outline-none focus:border-blue-500 transition"
             required 
           />
-          
-          <button 
-            type="submit" 
-            className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 rounded-lg font-bold shadow-lg transform hover:scale-[1.02] transition-all"
-          >
-            {isLogin ? 'Initiate Launch Sequence 🚀' : 'Sign Up'}
+
+          <button type="submit" className="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded font-bold text-white hover:shadow-[0_0_20px_rgba(0,100,255,0.5)] transition transform hover:scale-105">
+            {isLogin ? "Initiate Launch Sequence 🚀" : "Register Credentials 📝"}
           </button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-white/10 text-center">
-          <p className="text-gray-400 text-sm">
-            {isLogin ? "No clearance code? " : "Already have access? "}
-            <button 
-              onClick={() => setIsLogin(!isLogin)} 
-              className="text-blue-300 hover:text-white font-bold ml-1 transition-colors underline"
-            >
-              {isLogin ? 'Request Access' : 'Login'}
-            </button>
-          </p>
+        <div className="mt-6 text-center">
+          <button 
+            onClick={() => { setIsLogin(!isLogin); setMessage(''); }}
+            className="text-blue-400 text-sm hover:text-blue-300 underline underline-offset-4"
+          >
+            {isLogin ? "No clearance code? Request Access" : "Already have credentials? Login"}
+          </button>
         </div>
       </div>
     </div>
