@@ -1,10 +1,9 @@
 import axios from 'axios';
 
-// Create an axios instance that automatically picks the right URL
+// FORCE the app to use the Render Cloud URL
+// We are hardcoding it so it CANNOT fail to find it.
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
+  baseURL: 'https://daily-cosmos.onrender.com/api'
 });
 
 export default api;
-
-// Deployment Fix v1

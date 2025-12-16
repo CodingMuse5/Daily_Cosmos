@@ -18,8 +18,6 @@ const Login = ({ setToken }) => {
     e.preventDefault();
     setMessage('');
     try {
-      // OLD CODE WAS: axios.post('http://localhost:5000/api/auth/login'...)
-      // NEW CODE: We let 'api' handle the URL automatically
       const route = isLogin ? '/auth/login' : '/auth/register';
       
       const res = await api.post(route, formData); // <--- Using 'api.post'
