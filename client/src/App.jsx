@@ -112,7 +112,7 @@ function App() {
     return (
       <div className="h-screen flex items-center justify-center bg-gray-900 text-white relative overflow-hidden">
         <div className="absolute inset-0 bg-cover bg-center opacity-50 blur-sm" style={{ backgroundImage: `url('${backgroundImageUrl}')` }}></div>
-        <div className="text-2xl animate-pulse relative z-10 font-bold">🚀 Establishing Uplink...</div>
+        <div className="text-2xl animate-pulse relative z-10 font-bold">Establishing Uplink...</div>
       </div>
     );
   }
