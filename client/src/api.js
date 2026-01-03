@@ -1,10 +1,23 @@
 import axios from 'axios';
 
-// FORCE the app to use the Render Cloud URL
-// We are hardcoding it so it CANNOT fail to find it.
 const api = axios.create({
-  // Update this line below with your NEW URL (daily-cosmos-1)
-  baseURL: 'https://daily-cosmos-1.onrender.com/api' 
+  baseURL: 'https://daily-cosmos-1.onrender.com/api'
 });
 
+// 🛡️ THE INTERCEPTOR (The Fix)
+// This code runs automatically before every single request.
+// It grabs the token from storage and attaches it to the header.
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      config.headers['x-auth-token'] = token;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
 export default api;
+
+//baseURL: 'https://daily-cosmos-1.onrender.com/api' 
