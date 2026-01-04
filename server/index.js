@@ -58,8 +58,15 @@ app.get('/api/daily', async (req, res) => {
     res.json(newPost);
 
   } catch (err) {
-    console.error("Error:", err.message);
-    res.status(500).json({ error: "Server Error" });
+    console.error("NASA Failed, sending backup:", err.message);
+    
+    // You MUST send this JSON back so the site doesn't load forever
+    res.json({
+        title: "Backup Space Data",
+        url: "https://apod.nasa.gov/apod/image/2301/DiabloCanyon_Benintende_960.jpg",
+        explanation: "NASA API is currently unavailable. This is a backup image showing the Milky Way...",
+        media_type: "image"
+    });
   }
 });
 
