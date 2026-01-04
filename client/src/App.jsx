@@ -191,12 +191,12 @@ function App() {
                       <span className="px-3 py-1 bg-blue-500/30 text-blue-200 text-sm rounded-full border border-blue-400/30">{post.date}</span>
                     </div>
                     <button onClick={handleLike} className="flex flex-col items-center group">
-                      {post.likes.includes(user?.id) ? (
+                      {post.likes?.includes(user?.id) ? (
                         <FaHeart className="text-4xl text-red-500 drop-shadow-glow transition-all transform scale-110" />
                       ) : (
                         <FaRegHeart className="text-4xl text-gray-400 group-hover:text-red-400 transition-all" />
                       )}
-                      <span className="text-sm mt-1 text-gray-400 group-hover:text-white">{post.likes.length}</span>
+                      <span className="text-sm mt-1 text-gray-400 group-hover:text-white">{post.likes?.length || 0}</span>
                     </button>
                   </div>
                   <p className="text-gray-200 leading-relaxed text-lg tracking-wide mt-4">{post.explanation}</p>
