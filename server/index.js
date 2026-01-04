@@ -39,7 +39,7 @@ app.get('/api/daily', async (req, res) => {
     const apiKey = process.env.NASA_API_KEY;
     const nasaUrl = `https://api.nasa.gov/planetary/apod?api_key=${apiKey}`;
 
-    const response = await axios.get(nasaUrl);
+    const response = await axios.get(nasaUrl, { timeout: 15000 });
     const data = response.data;
 
     // 4. Save to MongoDB
