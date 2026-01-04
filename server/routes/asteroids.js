@@ -11,7 +11,7 @@ router.get('/', async (req, res) => {
 
     // 2. Call NASA API
     // We use the DEMO_KEY. In production, you'd use your real key.
-    const apiKey = process.env.NASA_API_KEY || 'DEMO_KEY';
+    const apiKey = process.env.NASA_API_KEY;
     const url = `https://api.nasa.gov/neo/rest/v1/feed?start_date=${today}&end_date=${today}&api_key=${apiKey}`;
     
     const response = await axios.get(url);
