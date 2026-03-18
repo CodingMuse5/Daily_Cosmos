@@ -75,4 +75,5 @@ app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/asteroids', asteroidRoutes);
+app.use('/api/copilot', require('./routes/copilot'));
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
