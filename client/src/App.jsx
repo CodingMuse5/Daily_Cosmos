@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import api from './api';
-import { jwtDecode } from "jwt-decode";
 import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import Login from './components/Login';
 import Profile from './components/Profile';
+import Copilot from './components/Copilot';
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [user, setUser] = useState(null);
@@ -277,6 +277,8 @@ function App() {
               )}
             </div>
           </div>
+
+          <Copilot />
 
         </div>
       </div>
