@@ -3,6 +3,7 @@ import axios from 'axios';
 // 1. Create the API instance pointing to Render
 const api = axios.create({
   baseURL: 'https://daily-cosmos-1.onrender.com/api'
+  //baseURL : 'http://localhost:5000/api'
 });
 
 // 2. The "Universal" Interceptor

@@ -4,6 +4,8 @@ import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import Login from './components/Login';
 import Profile from './components/Profile';
 import Copilot from './components/Copilot';
+import UserSearch from './components/UserSearch'; // NEW IMPORT
+
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [user, setUser] = useState(null);
@@ -17,8 +19,6 @@ function App() {
   const backgroundImageUrl = "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop";
 
   // 1. LOGIN CHECK & DATA FETCHING
-  // 1. LOGIN CHECK & DATA FETCHING
-  // 1. LOGIN CHECK & DATA FETCHING
   useEffect(() => {
     if (token) {
       const fetchData = async () => {
@@ -26,7 +26,6 @@ function App() {
           const config = { headers: { 'x-auth-token': token } };
 
           // A. Get User Profile (Rank)
-          // We use 'api' instead of 'axios', and remove the localhost part
           const userRes = await api.get('/auth/me', config);
           setUser(userRes.data);
 
@@ -60,7 +59,6 @@ function App() {
     try {
       const config = { headers: { 'x-auth-token': token } };
       
-      // UPDATED: Uses 'api' and short path
       await api.put(`/users/add/${friendId}`, {}, config);
       
       // Update local user state
@@ -72,12 +70,10 @@ function App() {
   };
 
   // 2. HANDLE LIKE BUTTON
- // 2. HANDLE LIKE BUTTON
   const handleLike = async () => {
     try {
       const config = { headers: { 'x-auth-token': token } };
       
-      // UPDATED: Uses 'api' and short path
       const res = await api.put(`/posts/like/${post.date}`, {}, config);
       
       // Update the post with new likes immediately
@@ -91,8 +87,6 @@ function App() {
       console.error(err);
     }
   };
-
-  
 
   // 3. LOGOUT FUNCTION
   const logout = () => {
@@ -117,7 +111,6 @@ function App() {
     );
   }
 
-  // SCENARIO 3: Dashboard -> Show Data
   // SCENARIO 3: VIEW CHECK
   if (view === 'profile') {
     return <Profile user={user} goBack={() => setView('home')} />;
@@ -136,43 +129,48 @@ function App() {
       className="min-h-screen text-white p-4 flex flex-col items-center bg-cover bg-center bg-fixed relative"
       style={{ backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('${backgroundImageUrl}')` }}
     >
+      {/* --- UPDATED NAVIGATION BAR --- */}
       <nav className="w-full max-w-6xl flex justify-between items-center py-6 mb-8 relative z-10">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent drop-shadow-lg">
+        
+        {/* LEFT: Logo */}
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent drop-shadow-lg shrink-0">
           DailyCosmos
         </h1>
-        <div className="flex items-center gap-4">
-  
-  {/* 1. The Rank Display (NEW!) */}
-  <div className="text-right hidden sm:block mr-2">
-    <p className="text-sm font-bold text-white">
-      {user?.username}
-    </p>
-    <p className="text-xs text-blue-300 font-mono uppercase tracking-widest">
-      {user ? getRank(user.likeCount) : 'Loading...'}
-    </p>
-  </div>
 
-  {/* 2. My Profile Button */}
-  <button 
-    onClick={() => setView('profile')}
-    className="text-gray-300 hover:text-white font-medium transition"
-  >
-    My Profile
-  </button>
-  
-  {/* 3. Logout Button */}
-  <button onClick={logout} className="px-4 py-2 bg-red-500/20 border border-red-500/50 text-red-300 rounded-full hover:bg-red-500/40 transition backdrop-blur-sm">
-    Abort Mission
-  </button>
-</div>
-      </nav>
+        {/* MIDDLE: The New Search Bar */}
+        <div className="flex-1 max-w-md mx-8 hidden md:block">
+          <UserSearch />
+        </div>
 
-      {/* ... (Keep the rest of your Dashboard Grid Code exactly the same as before) ... */}
-      <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
-          {/* ... Left Column (Post) and Right Column (Buddies) ... */}
-          {/* PASTE YOUR EXISTING GRID CODE HERE */}
+        {/* RIGHT: User Controls */}
+        <div className="flex items-center gap-4 shrink-0">
+          {/* 1. The Rank Display */}
+          <div className="text-right hidden sm:block mr-2">
+            <p className="text-sm font-bold text-white">
+              {user?.username}
+            </p>
+            <p className="text-xs text-blue-300 font-mono uppercase tracking-widest">
+              {user ? getRank(user.likeCount) : 'Loading...'}
+            </p>
+          </div>
+
+          {/* 2. My Profile Button */}
+          <button 
+            onClick={() => setView('profile')}
+            className="text-gray-300 hover:text-white font-medium transition"
+          >
+            My Profile
+          </button>
           
-          {/* Need me to paste the full grid code again? Let me know if you lost it! */}
+          {/* 3. Logout Button */}
+          <button onClick={logout} className="px-4 py-2 bg-red-500/20 border border-red-500/50 text-red-300 rounded-full hover:bg-red-500/40 transition backdrop-blur-sm">
+            Abort Mission
+          </button>
+        </div>
+      </nav>
+      {/* ------------------------------ */}
+
+      <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
           <div className="md:col-span-2">
             {post && (
               <div className="bg-gray-900/60 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl border border-white/10">
@@ -191,7 +189,7 @@ function App() {
                       <span className="px-3 py-1 bg-blue-500/30 text-blue-200 text-sm rounded-full border border-blue-400/30">{post.date}</span>
                     </div>
                     <button onClick={handleLike} className="flex flex-col items-center group">
-                      {post.likes?.includes(user?.id) ? (
+                      {post.likes?.includes(user?._id) ? (
                         <FaHeart className="text-4xl text-red-500 drop-shadow-glow transition-all transform scale-110" />
                       ) : (
                         <FaRegHeart className="text-4xl text-gray-400 group-hover:text-red-400 transition-all" />
@@ -205,7 +203,6 @@ function App() {
             )}
           </div>
 
-          {/* RIGHT COLUMN: Buddies & Asteroids */}
         <div className="md:col-span-1 flex flex-col gap-6">
           
           {/* 1. Space Buddies Panel */}
@@ -249,7 +246,7 @@ function App() {
             )}
           </div>
 
-          {/* 2. Asteroid Watch Panel (NEW!) */}
+          {/* 2. Asteroid Watch Panel */}
           <div className="bg-red-900/20 backdrop-blur-xl p-6 rounded-3xl border border-red-500/30">
             <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-red-400">
               <span>☄️</span> Near Earth Objects

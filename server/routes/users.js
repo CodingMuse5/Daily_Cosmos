@@ -90,4 +90,45 @@ router.put('/add/:id', auth, async (req, res) => {
   }
 });
 
+// @route   GET /api/users/search?q=something
+// @desc    Fuzzy search users by username using MongoDB Atlas Search
+router.get('/search', async (req, res) => {
+  try {
+    const queryText = req.query.q;
+
+    // Return an empty array early if no query string is provided
+    if (!queryText || queryText.trim() === '') {
+      return res.json([]);
+    }
+
+    const users = await User.aggregate([
+      {
+        $search: {
+          index: "default", // Matches the index name built in MongoDB Atlas
+          text: {
+            query: queryText,
+            path: "username", // Uses the exact field from your UserSchema
+            fuzzy: {
+              maxEdits: 2 // Allows up to 2 typos (e.g., "shrya" matches "shreya")
+            }
+          }
+        }
+      },
+      {
+        $project: {
+          password: 0 // Security constraint: Never return the password hash
+        }
+      },
+      {
+        $limit: 10 // Performance optimization: Restrict output payload size
+      }
+    ]);
+
+    res.json(users);
+  } catch (err) {
+    console.error("Atlas Search Error:", err.message);
+    res.status(500).send("Server Error during search");
+  }
+});
+
 module.exports = router;
