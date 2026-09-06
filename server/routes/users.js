@@ -92,7 +92,7 @@ router.put('/add/:id', auth, async (req, res) => {
 
 // @route   GET /api/users/search?q=something
 // @desc    Fuzzy search users by username using MongoDB Atlas Search
-router.get('/search', async (req, res) => {
+router.get('/search', auth, async (req, res) => {
   try {
     const queryText = req.query.q;
 

@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
 
     // Create Token (ID Card)
     const payload = { user: { id: user.id } };
-    jwt.sign(payload, "secret_token_key", { expiresIn: '5d' }, (err, token) => {
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5d' }, (err, token) => {
       if (err) throw err;
       res.json({ token }); // Send token to frontend
     });
@@ -50,7 +50,7 @@ router.post('/login', async (req, res) => {
 
     // Create Token
     const payload = { user: { id: user.id } };
-    jwt.sign(payload, "secret_token_key", { expiresIn: '5d' }, (err, token) => {
+    jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5d' }, (err, token) => {
       if (err) throw err;
       res.json({ token });
     });

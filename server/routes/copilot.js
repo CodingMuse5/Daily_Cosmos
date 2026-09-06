@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { GoogleGenerativeAI } = require('@google/generative-ai');
+const auth = require('../middleware/auth');
 
 // Initialize the Gemini API with your secret key
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
 // POST route: /api/copilot/ask
-router.post('/ask', async (req, res) => {
+router.post('/ask', auth, async (req, res) => {
   try {
     const { message } = req.body;
 

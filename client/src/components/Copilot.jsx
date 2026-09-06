@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import api from '../api';
 
 const Copilot = () => {
   const [input, setInput] = useState('');
@@ -15,14 +16,9 @@ const Copilot = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://daily-cosmos-1.onrender.com/api/copilot/ask', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ message: input }),
-      });
+      const response = await api.post('/copilot/ask', { message: input });
 
-      const data = await response.json();
-      setMessages([...newMessages, { text: data.reply, sender: 'ai' }]);
+      setMessages([...newMessages, { text: response.data.reply, sender: 'ai' }]);
     } catch (error) {
       console.error("Transmission error:", error);
       setMessages([...newMessages, { text: "Communication link failed. Please check backend connection.", sender: 'ai' }]);
