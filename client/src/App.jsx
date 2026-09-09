@@ -125,14 +125,10 @@ function App() {
 
   // SCENARIO 4: Dashboard (Home)
   return (
-    <div className="min-h-screen text-white p-4 flex flex-col items-center relative">
-      {/* Fixed background lives in its own layer so it isn't repainted
-          against the backdrop-blur panels on every scroll frame. */}
-      <div
-        className="fixed inset-0 -z-10 bg-cover bg-center"
-        style={{ backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('${backgroundImageUrl}')` }}
-      ></div>
-
+    <div
+      className="min-h-screen text-white p-4 flex flex-col items-center bg-cover bg-center bg-fixed relative"
+      style={{ backgroundImage: `linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)), url('${backgroundImageUrl}')` }}
+    >
       {/* --- UPDATED NAVIGATION BAR --- */}
       <nav className="w-full max-w-6xl flex justify-between items-center py-6 mb-8 relative z-10">
         
